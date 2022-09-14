@@ -3,11 +3,9 @@ import Ingredients.*;
 public class App {
 
     public static void main(String[] args) {
-            Navigation.mainMenu();
-        }
-
-
+        Navigation.mainMenu();
     }
+}
 
 
 
