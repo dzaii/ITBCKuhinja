@@ -3,39 +3,41 @@ package Ingredients;
 import java.util.HashMap;
 
 public class Recipe implements Priceable {
+    static int idCount=1;
+    int id;
+
     private String name;
     private Complexity complexity;
+
+    private boolean isFav = false;
     private HashMap<WeightedIngredient,Double> ingredients;
 
     Recipe(String name,Complexity complexity){
         this.name = name.trim().toUpperCase();
         this.complexity = complexity;
         this.ingredients =  new HashMap<>();
+        this.id = idCount++;
     }
 
-    boolean addIngredient(String name,double weight){
-        if(DataBase.hasIngredient(name)){
-            this.ingredients.put(DataBase.getIngredient(name),weight);
-            return true;
+    public int getId() {
+        return id;
+    }
+
+    boolean addIngredient(String name, double weight){
+        for(WeightedIngredient ingredient : DataBase.getIngHM().values()) {
+            if (ingredient.getName().equals(name)) {
+                this.ingredients.put(ingredient, weight);
+                return true;
+            }
         }
         return false;
     }
-     void removeIngredient(String name){
-        this.ingredients.remove(DataBase.getIngredient(name));
+     void removeIngredient(int id){
+        this.ingredients.remove(DataBase.getIngHM().get(id));
     }
-
-    public String toString(){
-        String s = "";
-        for(Ingredient ingredient : this.ingredients.keySet()){
-            s+= ingredient.getName() + "..." + this.ingredients.get(ingredient)+", ";
-        }
-        return s;
-    }
-
     public String getName() {
         return name;
     }
-
     public Complexity getComplexity() {
         return complexity;
     }
@@ -55,7 +57,24 @@ public class Recipe implements Priceable {
         return scaledRecipe;
     }
 
-    public HashMap<WeightedIngredient, Double> getIngredients() {
+    @Override
+    public String toString() {
+        String s = "| ";
+        for(WeightedIngredient ingredient : this.ingredients.keySet()){
+            s+= ingredient.getName() + "..." + ingredients.get(ingredient) + " | ";
+        }
+        return s;
+    }
+
+    public boolean isFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean fav) {
+        isFav = fav;
+    }
+
+    HashMap<WeightedIngredient, Double> getIngredients() {
         return ingredients;
     }
 }

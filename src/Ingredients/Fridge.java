@@ -1,5 +1,6 @@
 package Ingredients;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public abstract class Fridge {
@@ -13,7 +14,7 @@ public abstract class Fridge {
     }
     public static void removeFromFridge(WeightedIngredient ingredient){
         fridgeIngreients.remove(ingredient);
-        ingredient.setWeight(0);
+        ingredient.addWeight(-ingredient.getWeight());
     }
     public static boolean recipePossible(Recipe recipe){
         for(WeightedIngredient ingredient : recipe.getIngredients().keySet()){
@@ -26,7 +27,6 @@ public abstract class Fridge {
     public static boolean recipePossibleScaled(Recipe recipe, double percentage){
         for(WeightedIngredient ingredient : recipe.getIngredients().keySet()){
             if((recipe.getIngredients().get(ingredient) *(percentage/100)) > ingredient.getWeight()) {
-                System.out.println("nedovoljno");
                 return false;
             }
         }
@@ -42,9 +42,10 @@ public abstract class Fridge {
     }
 }
     public static String lookInFridge(){
+        DecimalFormat formatter = new DecimalFormat("#0.00");
         String s = "";
         for(WeightedIngredient ingredient: fridgeIngreients){
-            s+= ingredient.getName() + " " + ingredient.getWeight()+"\n";
+            s+= ingredient.getId() + " : " + ingredient.getName() + " " +formatter.format(ingredient.getWeight())+"\n";
         }
         return "Sadrzaj frizidera: \n" + s;
     }
